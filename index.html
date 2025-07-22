@@ -3,309 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mural de Recados Virtual</title>
+    <title>Mural da Gratidão</title>
     
-    <!-- Tailwind CSS para estilização -->
+    <!-- Tailwind CSS para um design moderno e responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Inter e Patrick Hand para um visual de post-it -->
+    <!-- Google Fonts: Inter e Caveat para um visual amigável -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Ícones (Feather Icons) -->
+    <script src="https://unpkg.com/feather-icons"></script>
 
     <style>
         /* Estilos personalizados para complementar o Tailwind */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5; /* Um cinza claro para o fundo */
+            background-color: #f0f4f8; /* Um fundo suave e neutro */
         }
-        .font-patrick-hand {
-            font-family: 'Patrick Hand', cursive;
+        .font-handwriting {
+            font-family: 'Caveat', cursive;
         }
-        /* Efeito de sombra e rotação para os post-its */
+        /* Efeito de sombra e rotação sutil para os post-its */
         .post-it {
-            box-shadow: 5px 5px 7px rgba(33,33,33,.7);
-            transition: transform 0.15s linear;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-        /* Rotações aleatórias para dar um ar mais natural */
-        .post-it:nth-child(2n) { transform: rotate(4deg); }
-        .post-it:nth-child(3n) { transform: rotate(-3deg); }
-        .post-it:nth-child(4n) { transform: rotate(1deg); }
-        .post-it:nth-child(5n) { transform: rotate(-2deg); }
         .post-it:hover {
-            transform: scale(1.05);
+            transform: scale(1.05) rotate(1deg);
+            box-shadow: 8px 8px 20px rgba(0,0,0,0.15);
             z-index: 10;
         }
-        /* Estilo para a barra de rolagem */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
+        /* Rotações aleatórias para dar um ar mais orgânico */
+        .rotate-1 { transform: rotate(-1deg); }
+        .rotate-2 { transform: rotate(1.5deg); }
+        .rotate-3 { transform: rotate(-2deg); }
+        .rotate-4 { transform: rotate(2.5deg); }
+        .rotate-5 { transform: rotate(-0.5deg); }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="antialiased text-slate-800">
 
-    <div id="app" class="container mx-auto p-4 md:p-8">
+    <div id="app" class="container mx-auto p-4 md:p-8 max-w-7xl">
 
         <!-- Cabeçalho -->
         <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-700">Mural de Recados da Equipe</h1>
-            <p class="text-gray-500 mt-2">Deixe uma nota para seus colegas. As atualizações são em tempo real!</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-700">Mural da Gratidão</h1>
+            <p class="text-slate-500 mt-2">Um espaço para celebrar e agradecer as pequenas e grandes ações.</p>
+            <div id="userInfo" class="mt-4 text-xs text-slate-400">
+                Carregando seu ID de usuário...
+            </div>
         </header>
 
-        <!-- Formulário para adicionar um novo recado -->
-        <section id="form-section" class="mb-8 max-w-2xl mx-auto">
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <textarea id="note-text" class="w-full p-3 border-2 border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition" rows="4" placeholder="Escreva seu recado aqui..."></textarea>
-                <div class="flex flex-col sm:flex-row items-center justify-between mt-4">
-                    <div class="flex items-center mb-4 sm:mb-0">
-                        <label for="note-color" class="mr-3 font-medium text-gray-600">Cor:</label>
-                        <div class="flex space-x-2">
-                            <!-- Opções de cores para os post-its -->
-                            <div class="color-option w-8 h-8 rounded-full cursor-pointer bg-yellow-200 border-2 border-yellow-400" data-color="bg-yellow-200"></div>
-                            <div class="color-option w-8 h-8 rounded-full cursor-pointer bg-green-200" data-color="bg-green-200"></div>
-                            <div class="color-option w-8 h-8 rounded-full cursor-pointer bg-blue-200" data-color="bg-blue-200"></div>
-                            <div class="color-option w-8 h-8 rounded-full cursor-pointer bg-pink-200" data-color="bg-pink-200"></div>
-                            <div class="color-option w-8 h-8 rounded-full cursor-pointer bg-purple-200" data-color="bg-purple-200"></div>
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Coluna para adicionar uma nova nota -->
+            <div class="lg:col-span-1">
+                <form id="gratitudeForm" class="bg-white p-6 rounded-xl shadow-lg sticky top-8">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center">
+                        <i data-feather="heart" class="mr-2 text-red-500"></i>
+                        Deixe seu recado
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="from" class="block text-sm font-medium text-slate-600">De:</label>
+                            <input type="text" id="from" name="from" placeholder="Seu nome" class="mt-1 block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500" required>
                         </div>
-                        <input type="hidden" id="note-color-value" value="bg-yellow-200">
+                        <div>
+                            <label for="to" class="block text-sm font-medium text-slate-600">Para:</label>
+                            <input type="text" id="to" name="to" placeholder="Nome do colega ou equipe" class="mt-1 block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500" required>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-slate-600">Sua mensagem de gratidão:</label>
+                            <textarea id="message" name="message" rows="5" placeholder="Seja específico! O que a pessoa fez e qual foi o impacto positivo?" class="mt-1 block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 flex items-center justify-center">
+                            <i data-feather="send" class="mr-2 h-5 w-5"></i>
+                            Publicar Agradecimento
+                        </button>
                     </div>
-                    <button id="add-note-btn" class="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
-                        Adicionar Recado
-                    </button>
-                </div>
+                </form>
             </div>
-        </section>
 
-        <!-- Seção onde os recados são exibidos -->
-        <main id="notes-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Os recados do Firestore serão inseridos aqui -->
-            <div id="loading-indicator" class="col-span-full text-center text-gray-500">
-                <p>Carregando recados...</p>
+            <!-- Coluna para exibir as notas -->
+            <div class="lg:col-span-2">
+                <div id="loading" class="text-center py-10">
+                    <p class="text-slate-500">Carregando as mensagens de gratidão...</p>
+                </div>
+                <div id="gratitude-board" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- As notas de gratidão serão inseridas aqui pelo JavaScript -->
+                </div>
+                 <div id="empty-state" class="hidden text-center py-20 bg-white rounded-xl shadow-lg">
+                    <i data-feather="coffee" class="mx-auto h-16 w-16 text-slate-400"></i>
+                    <h3 class="mt-4 text-xl font-semibold text-slate-600">O mural está vazio!</h3>
+                    <p class="mt-1 text-slate-500">Seja o primeiro a espalhar a gratidão na equipe.</p>
+                </div>
             </div>
         </main>
 
-        <!-- Rodapé com informações de colaboração -->
-        <footer class="text-center mt-12 text-gray-500">
-            <p>Seu ID de usuário é: <strong id="user-id-display" class="select-all">...</strong></p>
-            <p class="text-sm mt-1">Compartilhe esta página para que outros possam ver e adicionar recados.</p>
-        </footer>
-
     </div>
 
-    <!-- Módulos do Firebase -->
+    <!-- Módulo JavaScript com a lógica do Firebase -->
     <script type="module">
-        // Importações necessárias do SDK do Firebase
+        // Importações do Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- Configuração do Firebase ---
-        // As variáveis __firebase_config, __app_id e __initial_auth_token são injetadas pelo ambiente.
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'mural-de-recados-default';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // Configuração do Firebase (será preenchida pelo ambiente)
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'mural-gratidao-default';
 
-        let db, auth, userId;
+        // Inicialização dos serviços do Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        // --- Elementos do DOM ---
-        const addNoteBtn = document.getElementById('add-note-btn');
-        const noteText = document.getElementById('note-text');
-        const noteColorValue = document.getElementById('note-color-value');
-        const notesGrid = document.getElementById('notes-grid');
-        const loadingIndicator = document.getElementById('loading-indicator');
-        const userIdDisplay = document.getElementById('user-id-display');
-        const colorOptions = document.querySelectorAll('.color-option');
+        // Referência à coleção de notas no Firestore
+        const notesCollectionRef = collection(db, `/artifacts/${appId}/public/data/gratitude_notes`);
 
-        // --- Funções Principais ---
+        // Elementos do DOM
+        const form = document.getElementById('gratitudeForm');
+        const board = document.getElementById('gratitude-board');
+        const loadingDiv = document.getElementById('loading');
+        const emptyStateDiv = document.getElementById('empty-state');
+        const userInfoDiv = document.getElementById('userInfo');
+        
+        // Cores para os post-its
+        const postItColors = [
+            'bg-yellow-200', 'bg-green-200', 'bg-blue-200', 'bg-pink-200', 'bg-purple-200', 'bg-orange-200'
+        ];
+        // Rotações para os post-its
+        const postItRotations = ['rotate-1', 'rotate-2', 'rotate-3', 'rotate-4', 'rotate-5'];
 
-        /**
-         * Inicializa o Firebase e configura a autenticação e o listener de recados.
-         */
-        async function initializeAppAndAuth() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
+        let currentUserId = null;
 
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        userIdDisplay.textContent = userId;
-                        console.log("Usuário autenticado:", userId);
-                        // Após autenticar, começa a ouvir os recados
-                        listenForNotes();
+        // Função para renderizar uma nota no mural
+        const renderNote = (noteData) => {
+            const docId = noteData.id;
+            const note = noteData.data();
+
+            const randomColor = postItColors[Math.floor(Math.random() * postItColors.length)];
+            const randomRotation = postItRotations[Math.floor(Math.random() * postItRotations.length)];
+            
+            const noteEl = document.createElement('div');
+            noteEl.className = `post-it p-6 rounded-lg flex flex-col h-full ${randomColor} ${randomRotation}`;
+            noteEl.setAttribute('data-id', docId);
+
+            let deleteButtonHTML = '';
+            // Permite deletar apenas se o usuário for o criador da nota
+            if (currentUserId && note.userId === currentUserId) {
+                deleteButtonHTML = `<button data-id="${docId}" class="delete-btn absolute top-2 right-2 text-slate-500 hover:text-red-500 transition-colors">
+                                        <i data-feather="x-circle" class="h-5 w-5"></i>
+                                    </button>`;
+            }
+
+            noteEl.innerHTML = `
+                <div class="relative">
+                    <div class="font-handwriting text-3xl text-slate-700 break-words">Para: ${escapeHTML(note.to)}</div>
+                    <p class="mt-4 text-slate-600 flex-grow break-words">${escapeHTML(note.message)}</p>
+                    <div class="mt-4 pt-2 border-t border-slate-400/50 text-right">
+                        <p class="text-sm font-semibold text-slate-700">De: ${escapeHTML(note.from)}</p>
+                    </div>
+                    ${deleteButtonHTML}
+                </div>
+            `;
+            
+            // Adiciona a nota no início do mural
+            board.prepend(noteEl);
+            feather.replace(); // Atualiza os ícones
+        };
+
+        // Função para escapar HTML e prevenir XSS
+        const escapeHTML = (str) => {
+            const p = document.createElement('p');
+            p.appendChild(document.createTextNode(str));
+            return p.innerHTML;
+        }
+
+        // Autenticação e carregamento dos dados
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                userInfoDiv.innerHTML = `Seu ID de Colaborador (compartilhe com sua equipe): <span class="font-mono bg-slate-200 text-slate-600 px-2 py-1 rounded">${currentUserId}</span>`;
+
+                // Listener em tempo real para as notas
+                onSnapshot(query(notesCollectionRef), (snapshot) => {
+                    loadingDiv.style.display = 'none';
+                    board.innerHTML = ''; // Limpa o mural antes de redesenhar
+                    
+                    if (snapshot.empty) {
+                        emptyStateDiv.classList.remove('hidden');
                     } else {
-                        console.log("Nenhum usuário autenticado.");
-                        userIdDisplay.textContent = "Não autenticado";
+                        emptyStateDiv.classList.add('hidden');
+                        snapshot.docs.sort((a, b) => b.data().createdAt - a.data().createdAt).forEach(doc => {
+                            renderNote({ id: doc.id, data: () => doc.data() });
+                        });
                     }
                 });
-                
-                // Tenta autenticar com o token customizado ou de forma anônima
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
+            }
+        });
+
+        // Lógica de autenticação
+        const authenticate = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
                     await signInAnonymously(auth);
                 }
-
             } catch (error) {
-                console.error("Erro ao inicializar o Firebase:", error);
-                notesGrid.innerHTML = '<p class="text-red-500 col-span-full text-center">Erro ao conectar com o serviço. Tente recarregar a página.</p>';
+                console.error("Erro na autenticação:", error);
+                userInfoDiv.textContent = "Não foi possível conectar. Tente recarregar a página.";
             }
-        }
+        };
 
-        /**
-         * Ouve as mudanças na coleção de recados do Firestore em tempo real.
-         */
-        function listenForNotes() {
-            // Caminho para a coleção pública de recados
-            const notesCollectionPath = `/artifacts/${appId}/public/data/notes`;
-            const notesCollection = collection(db, notesCollectionPath);
-            // Cria uma query para ordenar os recados por data de criação
-            const q = query(notesCollection, orderBy("timestamp", "desc"));
-
-            onSnapshot(q, (snapshot) => {
-                loadingIndicator.style.display = 'none';
-                notesGrid.innerHTML = ''; // Limpa o grid antes de adicionar os novos recados
-                if (snapshot.empty) {
-                    notesGrid.innerHTML = '<p class="col-span-full text-center text-gray-500">Nenhum recado ainda. Seja o primeiro!</p>';
-                } else {
-                    snapshot.forEach(doc => {
-                        const note = doc.data();
-                        const noteElement = createNoteElement(doc.id, note.text, note.color, note.userId);
-                        notesGrid.appendChild(noteElement);
-                    });
-                }
-            }, (error) => {
-                console.error("Erro ao buscar recados:", error);
-                notesGrid.innerHTML = '<p class="text-red-500 col-span-full text-center">Não foi possível carregar os recados.</p>';
-            });
-        }
-
-        /**
-         * Cria o elemento HTML para um recado (post-it).
-         * @param {string} id - O ID do documento no Firestore.
-         * @param {string} text - O texto do recado.
-         * @param {string} colorClass - A classe de cor do Tailwind CSS.
-         * @param {string} authorId - O ID do usuário que criou o recado.
-         * @returns {HTMLElement} O elemento div do recado.
-         */
-        function createNoteElement(id, text, colorClass, authorId) {
-            const noteDiv = document.createElement('div');
-            noteDiv.className = `post-it p-4 rounded-md flex flex-col justify-between min-h-[150px] ${colorClass}`;
-            
-            // Usamos a fonte especial para o texto do recado
-            const textP = document.createElement('p');
-            textP.className = 'font-patrick-hand text-2xl text-gray-800 break-words flex-grow';
-            textP.textContent = text;
-            
-            const footerDiv = document.createElement('div');
-            footerDiv.className = 'flex justify-end items-center mt-2';
-
-            // Botão para deletar o recado
-            const deleteBtn = document.createElement('button');
-            deleteBtn.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash text-gray-600 hover:text-red-500 transition-colors" viewBox="0 0 16 16">
-                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                </svg>
-            `;
-            deleteBtn.title = "Apagar recado";
-            deleteBtn.onclick = () => deleteNote(id);
-            
-            footerDiv.appendChild(deleteBtn);
-            noteDiv.appendChild(textP);
-            noteDiv.appendChild(footerDiv);
-
-            return noteDiv;
-        }
-
-        /**
-         * Adiciona um novo recado ao Firestore.
-         */
-        async function addNote() {
-            const text = noteText.value.trim();
-            const color = noteColorValue.value;
-
-            if (!text) {
-                alert("Por favor, escreva um recado.");
+        // Adicionar uma nova nota
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUserId) {
+                alert("Você precisa estar autenticado para postar.");
                 return;
             }
-            if (!userId) {
-                alert("Autenticação pendente, por favor aguarde.");
-                return;
-            }
+
+            const fromInput = form.querySelector('#from');
+            const toInput = form.querySelector('#to');
+            const messageInput = form.querySelector('#message');
+            
+            const newNote = {
+                from: fromInput.value,
+                to: toInput.value,
+                message: messageInput.value,
+                createdAt: serverTimestamp(),
+                userId: currentUserId
+            };
 
             try {
-                const notesCollectionPath = `/artifacts/${appId}/public/data/notes`;
-                await addDoc(collection(db, notesCollectionPath), {
-                    text: text,
-                    color: color,
-                    userId: userId,
-                    timestamp: serverTimestamp() // Usa o timestamp do servidor para ordenação
-                });
-                // Limpa os campos após o envio
-                noteText.value = '';
+                await addDoc(notesCollectionRef, newNote);
+                form.reset(); // Limpa o formulário
             } catch (error) {
-                console.error("Erro ao adicionar recado: ", error);
-                alert("Não foi possível adicionar o recado. Tente novamente.");
+                console.error("Erro ao adicionar nota: ", error);
+                alert("Ocorreu um erro ao salvar sua nota. Tente novamente.");
             }
-        }
-
-        /**
-         * Deleta um recado do Firestore.
-         * @param {string} id - O ID do documento a ser deletado.
-         */
-        async function deleteNote(id) {
-            if (confirm("Tem certeza que deseja apagar este recado?")) {
-                try {
-                    const noteDocPath = `/artifacts/${appId}/public/data/notes/${id}`;
-                    await deleteDoc(doc(db, noteDocPath));
-                } catch (error) {
-                    console.error("Erro ao deletar recado: ", error);
-                    alert("Não foi possível apagar o recado.");
-                }
-            }
-        }
-
-        /**
-         * Lida com a seleção de cor.
-         * @param {Event} e - O evento de clique.
-         */
-        function handleColorSelection(e) {
-            const selectedColor = e.target.dataset.color;
-            if (!selectedColor) return;
-
-            noteColorValue.value = selectedColor;
-
-            // Atualiza o visual da seleção
-            colorOptions.forEach(opt => {
-                opt.classList.remove('border-2', 'border-gray-700', 'ring-2', 'ring-offset-2', 'ring-blue-400');
-                if(opt.dataset.color === selectedColor) {
-                    opt.classList.add('ring-2', 'ring-offset-2', 'ring-blue-400');
-                }
-            });
-        }
-
-
-        // --- Event Listeners ---
-        addNoteBtn.addEventListener('click', addNote);
-        document.querySelector('.flex.space-x-2').addEventListener('click', handleColorSelection);
+        });
         
-        // --- Inicialização ---
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeAppAndAuth();
-            // Define a cor inicial visualmente
-            document.querySelector(`[data-color="${noteColorValue.value}"]`).classList.add('ring-2', 'ring-offset-2', 'ring-blue-400');
+        // Deletar uma nota (usando delegação de evento)
+        board.addEventListener('click', async (e) => {
+            const deleteButton = e.target.closest('.delete-btn');
+            if (deleteButton) {
+                const docId = deleteButton.dataset.id;
+                if (confirm("Tem certeza que deseja apagar esta nota?")) {
+                    try {
+                        const docRef = doc(db, `/artifacts/${appId}/public/data/gratitude_notes`, docId);
+                        await deleteDoc(docRef);
+                    } catch (error) {
+                        console.error("Erro ao deletar nota:", error);
+                        alert("Não foi possível apagar a nota.");
+                    }
+                }
+            }
         });
 
+        // Inicialização
+        authenticate();
+        feather.replace(); // Renderiza os ícones iniciais
     </script>
+</body>
+</html>
